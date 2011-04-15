@@ -82,7 +82,8 @@
 					curratedHeight = Math.floor(parseInt(height,10));
 					if($textarea.height() != curratedHeight){
 						$textarea.css({'height': curratedHeight + 'px','overflow':overflow});
-						
+						// Also change the twin's overflow so when max-height is reached, adding the scrollbars won't add height to the textarea
+						$twin.css('overflow',overflow);
 					}
 				}
 				
@@ -104,10 +105,10 @@
 						// Add an extra white space so new rows are added when you are at the end of a row.
 						$twin.html(textareaContent+'&nbsp;');
 						
-						// Change textarea height if twin plus the height of one line differs more than 3 pixel from textarea height
-						if(Math.abs($twin.height() + lineHeight - $textarea.height()) > 3){
+						// Change textarea height if twin height differs more than 3 pixel from textarea height
+						if(Math.abs($twin.height() - $textarea.height()) > 3){
 							
-							var goalheight = $twin.height()+lineHeight;
+							var goalheight = $twin.height();
 							if(goalheight >= maxheight) {
 								setHeightAndOverflow(maxheight,'auto');
 							} else if(goalheight <= minheight) {
