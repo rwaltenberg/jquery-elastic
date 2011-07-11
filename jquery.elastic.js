@@ -109,7 +109,6 @@
 				
 				function updateClosure() {
 					update();
-					return false;
 				};
 
 				// Update textarea size on keyup
