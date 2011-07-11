@@ -12,32 +12,21 @@
 */
 
 (function(jQuery){ 
-	jQuery.fn.extend({  
-		elastic: function() {
-		
-			//	We will create a div clone of the textarea
-			//	by copying these attributes from the textarea to the div.
-			var mimics = [
-				'paddingTop',
-				'paddingRight',
-				'paddingBottom',
-				'paddingLeft',
-				'fontSize',
-				'lineHeight',
-				'fontFamily',
-				'width',
-				'fontWeight'];
-			
-			var pseudoUUID = function(p) {
-				p = p || '';
-				var u = function() { return(((1+Math.random())*0x10000)|0).toString(16).substring(1); }
-				return(p+u()+u()+"-"+u()+"-"+u()+"-"+u()+"-"+u()+u()+u());
-			};
+	//	We will create a div clone of the textarea
+	//	by copying these attributes from the textarea to the div.
+	var mimics = 'paddingTop paddingRight paddingBottom paddingLeft fontSize lineHeight fontFamily width fontWeight'.split(' ');
 
+	function pseudoUUID(p) {
+		p = p || '';
+		var u = function() { return(((1+Math.random())*0x10000)|0).toString(16).substring(1); }
+		return(p+u()+u()+"-"+u()+"-"+u()+"-"+u()+"-"+u()+u()+u());
+	};
+
+	jQuery.fn.extend({
+		elastic: function() {
 			return this.each( function() {
-				
 				// Elastic only works on textareas
-				if ( this.type != 'textarea' ) {
+				if(this.type != 'textarea') {
 					return false;
 				}
 				
@@ -45,7 +34,7 @@
 					$twin		=	null,
 					twinId		=	$textarea.data('elastic-twin');
 					
-				if ( twinId ) {
+				if(twinId) {
 					$twin		=	jQuery('#'+twinId);
 					update();
 					return false;
@@ -76,7 +65,6 @@
 					$twin.css(mimics[i].toString(),$textarea.css(mimics[i].toString()));
 				}
 				
-				
 				// Sets a given height and overflow state on the textarea
 				function setHeightAndOverflow(height, overflow){
 					curratedHeight = Math.floor(parseInt(height,10));
@@ -87,10 +75,8 @@
 					}
 				}
 				
-				
 				// This function will update the height of the textarea if necessary 
 				function update() {
-					
 					// Get curated content from the textarea.
 					var textareaContent = $textarea.val().replace(/&/g,'&amp;').replace(/  /g, ' &nbsp;').replace(/<|>/g, '&gt;').replace(/\n/g, '<br />');
 					
@@ -98,7 +84,6 @@
 					var twinContent = $twin.html().replace(/<br>/ig,'<br />');
 					
 					if((textareaContent+'&nbsp;' != twinContent) || ($textarea.width() != $twin.width())){
-					
 						// Set twin to the same width as the textarea
 						$twin.width($textarea.width());
 						
@@ -107,7 +92,6 @@
 						
 						// Change textarea height if twin height differs more than 3 pixel from textarea height
 						if(Math.abs($twin.height() - $textarea.height()) > 3){
-							
 							var goalheight = $twin.height();
 							if(goalheight >= maxheight) {
 								setHeightAndOverflow(maxheight,'auto');
@@ -116,30 +100,30 @@
 							} else {
 								setHeightAndOverflow(goalheight,'hidden');
 							}
-							
 						}
-						
 					}
-					
 				}
 				
 				// Hide scrollbars
 				$textarea.css({'overflow':'hidden'});
 				
+				function updateClosure() {
+					update();
+					return false;
+				};
+
 				// Update textarea size on keyup
-				$textarea.keyup(function(){ update(); });
+				$textarea.keyup(updateClosure);
 				
 				// Define a custom event to allow manual updating
-				$textarea.bind('elasticupdate', function(){ update(); });
+				$textarea.bind('elasticupdate', updateClosure);
 				
 				// And this line is to catch the browser paste event
-				$textarea.live('input paste',function(e){ setTimeout( update, 250); });				
+				$textarea.live('input paste',function() { setTimeout(updateClosure, 250); });
 				
 				// Run update once when elastic is initialized
 				update();
-				
 			});
-			
-        } 
-    }); 
+		}
+	});
 })(jQuery);
