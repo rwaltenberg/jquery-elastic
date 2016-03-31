@@ -1,0 +1,21 @@
+{
+  "name": "jquery-elastic",
+  "version": "1.6.11",
+  "description": "Jan Jarfalk's excellent jquery-elastic plugin",
+  "main": [
+    "./jquery.elastic.source.js"
+  ],
+  "homepage": "http://www.unwrongest.com/projects/elastic",
+  "dependencies": {
+    "jquery": ">= 1.2.6"
+  },
+  "keywords": [
+    "jquery",
+    "elastic"
+  ],
+  "author": {
+    "name": "Jan Jarfalk",
+    "web": "http://www.unwrongest.com"
+  },
+  "license": "http://www.opensource.org/licenses/mit-license.php"
+}
