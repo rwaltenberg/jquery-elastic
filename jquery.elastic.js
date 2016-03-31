@@ -11,6 +11,8 @@
 *	@licens							MIT License - http://www.opensource.org/licenses/mit-license.php
 */
 
+/* global jQuery */
+
 (function(jQuery){ 
 	//	We will create a div clone of the textarea
 	//	by copying these attributes from the textarea to the div.
@@ -67,7 +69,7 @@
 				
 				// Sets a given height and overflow state on the textarea
 				function setHeightAndOverflow(height, overflow){
-					curratedHeight = Math.floor(parseInt(height,10));
+					var curratedHeight = Math.floor(parseInt(height,10));
 					if($textarea.height() != curratedHeight){
 						$textarea.css({'height': curratedHeight + 'px','overflow':overflow});
 						// Also change the twin's overflow so when max-height is reached, adding the scrollbars won't add height to the textarea
