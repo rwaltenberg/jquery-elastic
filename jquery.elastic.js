@@ -12,11 +12,10 @@
 */
 
 /* global jQuery */
-
 (function(jQuery){ 
 	//	We will create a div clone of the textarea
 	//	by copying these attributes from the textarea to the div.
-	var mimics = 'paddingTop paddingRight paddingBottom paddingLeft fontSize lineHeight fontFamily width fontWeight'.split(' ');
+	var mimics = 'borderTop borderRight borderBottom borderLeft paddingTop paddingRight paddingBottom paddingLeft fontSize lineHeight fontFamily width fontWeight'.split(' ');
 
 	function pseudoUUID(p) {
 		p = p || '';
@@ -42,17 +41,16 @@
 					return false;
 				}
 				
+				twinId			=	pseudoUUID('elastic');
+				$twin			=	jQuery('<div />').css({'position': 'absolute','display':'block','word-wrap':'break-word', 'box-sizing': 'content-box'});
+				$twin.attr('id',twinId);
+				$textarea.data('elastic-twin',twinId);
 					
 				var	lineHeight	=	parseInt($textarea.css('line-height'),10) || parseInt($textarea.css('font-size'),'10'),
 					minheight	=	parseInt($textarea.css('height'),10) || lineHeight*3,
 					maxheight	=	parseInt($textarea.css('max-height'),10) || Number.MAX_VALUE,
-					goalheight	=	0,
-					i 			=	0;
+					goalheight	=	0;
 				
-				twinId			=	pseudoUUID('elastic');
-				$twin			=	jQuery('<div />').css({'position': 'absolute','display':'none','word-wrap':'break-word'});
-				$twin.attr('id',twinId);
-				$textarea.data('elastic-twin',twinId);
 				
 				// Opera returns max-height of -1 if not set
 				if (maxheight < 0) { maxheight = Number.MAX_VALUE; }
@@ -60,12 +58,6 @@
 				// Append the twin to the DOM
 				// We are going to meassure the height of this, not the textarea.
 				$twin.appendTo($textarea.parent());
-				
-				// Copy the essential styles (mimics) from the textarea to the twin
-				var i = mimics.length;
-				while(i--){
-					$twin.css(mimics[i].toString(),$textarea.css(mimics[i].toString()));
-				}
 				
 				// Sets a given height and overflow state on the textarea
 				function setHeightAndOverflow(height, overflow){
@@ -79,6 +71,12 @@
 				
 				// This function will update the height of the textarea if necessary 
 				function update() {
+					// Copy the essential styles (mimics) from the textarea to the twin
+					var i = mimics.length;
+					while(i--){
+						$twin.css(mimics[i].toString(),$textarea.css(mimics[i].toString()));
+					}
+					
 					// Get curated content from the textarea.
 					var textareaContent = $textarea.val().replace(/&/g,'&amp;').replace(/  /g, ' &nbsp;').replace(/<|>/g, '&gt;').replace(/\n/g, '<br />');
 					
@@ -92,16 +90,19 @@
 						// Add an extra white space so new rows are added when you are at the end of a row.
 						$twin.html(textareaContent+'&nbsp;');
 						
-						// Change textarea height if twin height differs more than 3 pixel from textarea height
-						if(Math.abs($twin.height() - $textarea.height()) > 3){
-							var goalheight = $twin.height();
-							if(goalheight >= maxheight) {
-								setHeightAndOverflow(maxheight,'auto');
-							} else if(goalheight <= minheight) {
-								setHeightAndOverflow(minheight,'hidden');
-							} else {
-								setHeightAndOverflow(goalheight,'hidden');
-							}
+						var gap = parseInt($twin.css('padding-top'),10) + 
+								  parseInt($twin.css('border-top-width'),10) +
+								  parseInt($twin.css('padding-bottom'),10) +
+								  parseInt($twin.css('border-bottom-width'),10);
+								  
+						var goalheight = $twin.height() + ($textarea.css('box-sizing') === 'border-box' ? gap : 0);
+						
+						if(goalheight >= maxheight) {
+							setHeightAndOverflow(maxheight,'auto');
+						} else if(goalheight <= minheight) {
+							setHeightAndOverflow(minheight,'hidden');
+						} else {
+							setHeightAndOverflow(goalheight,'hidden');
 						}
 					}
 				}
