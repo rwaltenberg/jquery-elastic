@@ -3,7 +3,7 @@
   "version": "1.6.11",
   "description": "Jan Jarfalk's excellent jquery-elastic plugin",
   "main": [
-    "./jquery.elastic.source.js"
+    "./jquery.elastic.js"
   ],
   "homepage": "http://www.unwrongest.com/projects/elastic",
   "dependencies": {
