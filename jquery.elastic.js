@@ -42,7 +42,7 @@
 				}
 				
 				twinId			=	pseudoUUID('elastic');
-				$twin			=	jQuery('<div />').css({'position': 'absolute','display':'block','word-wrap':'break-word', 'box-sizing': 'content-box'});
+				$twin			=	jQuery('<div />').css({'position': 'absolute','display':'none','word-wrap':'break-word', 'box-sizing': 'content-box'});
 				$twin.attr('id',twinId);
 				$textarea.data('elastic-twin',twinId);
 					
